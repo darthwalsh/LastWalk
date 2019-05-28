@@ -22,18 +22,26 @@ const dogId = params.get("id")
 const database = firebase.database();
 const ref = database.ref(`${dogId}`);
 
+const last = { };
+
 function onClick(prefix) {
   return () => {
-    const newTime = 1 + +$(`${prefix}time`).textContent; // TODO
-    database.ref(`${dogId}/${prefix}`).set(newTime);
+    const newMillis = new Date().getTime();
+    database.ref(`${dogId}/${prefix}`).set(newMillis);
   }
 }
 
 function init(prefix) {
   $(prefix).onclick = onClick(prefix);
 
-  ref.on("value", snapShot =>
-    $(`${prefix}time`).textContent = snapShot.val()[prefix]);
+  ref.on("value", snapShot => last[prefix] = moment(snapShot.val()[prefix]));
+  
+  setInterval(() => {
+    if (!last[prefix]) {
+      return;
+    }
+    $(`${prefix}time`).textContent = last[prefix].fromNow();
+  }, 1);
 }
 
 window.onload = () => {
