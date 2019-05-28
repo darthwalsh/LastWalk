@@ -21,16 +21,23 @@ const dogId = params.get("id")
 
 const database = firebase.database();
 const ref = database.ref(`${dogId}`);
-const walkRef = database.ref(`${dogId}/walk`);
 
-function walkClick() {
-  const newTime = 1 + +$("walktime").textContent; // TODO
-  walkRef.set(newTime);
+function onClick(prefix) {
+  return () => {
+    const newTime = 1 + +$(`${prefix}time`).textContent; // TODO
+    database.ref(`${dogId}/${prefix}`).set(newTime);
+  }
+}
+
+function init(prefix) {
+  $(prefix).onclick = onClick(prefix);
+
+  ref.on("value", snapShot =>
+    $(`${prefix}time`).textContent = snapShot.val()[prefix]);
 }
 
 window.onload = () => {
-  $("walk").onclick = walkClick;
-
-  ref.on("value", snapShot => $("walktime").textContent = snapShot.val().walk);
+  init("walk");
+  init("poo");
 };
 
