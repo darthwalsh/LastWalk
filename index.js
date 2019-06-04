@@ -47,5 +47,8 @@ function init(prefix) {
 window.onload = () => {
   init("walk");
   init("poo");
+
+  $("aboutLink").onclick = () => $("about").style.visibility = "";
+  $("about").onclick = () => $("about").style.visibility = "hidden";
 };
 
