@@ -13,14 +13,11 @@ function $(id) {
   return document.getElementById(id);
 }
 
-const params = new URLSearchParams(location.search);
-if (!params.get("id")) {
-  alert("Missing '?id=...' in URL!");
-}
-const dogId = params.get("id")
+const params = new URLSearchParams(window.location.search);
+const dogId = params.get("id");
 
 const database = firebase.database();
-const ref = database.ref(`${dogId}`);
+let ref;
 
 const last = { };
 
@@ -53,9 +50,32 @@ function init(prefix) {
 }
 
 window.onload = () => {
-  init("walk");
-  init("poo");
+  if (dogId) {
+    ref = database.ref(dogId);
+    init("walk");
+    init("poo");
+    ref.once("value", snapshot => $("name").textContent = snapshot.val().name)
+  } else {
+    $("add").style.visibility = "";
+    const newId = Math.random().toString(36).substring(2);
 
+    $("addName").addEventListener("input", e => 
+      $("addDog").disabled = !Boolean(e.target.value.length));
+    $("addDog").onclick = () => {
+      database.ref(newId).set({
+        name: $("addName").value,
+      }, err => {
+        if (err) {
+          alert("Write failure: " + error.toString());
+        } else {
+          const url = new URL(window.location);
+          url.searchParams.set("id", newId);
+          window.location.replace(url.toString());
+        }
+      });
+    }
+  }
+  
   $("aboutLink").onclick = () => $("about").style.visibility = "";
   $("about").onclick = () => $("about").style.visibility = "hidden";
 };

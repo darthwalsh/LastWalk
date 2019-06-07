@@ -12,6 +12,9 @@
 
 <body>
   <div id="aboutLink">About</div>
+  
+  <h1 id="name">doggo</h1>
+  
   <img id="walk" src="walking-with-dog.svg" alt="Dog walk" width="240" height="240"/>
   <br>
   <span id="walktime">loading...</span>
@@ -22,7 +25,13 @@
   <br>
   <span id="pootime">loading...</span>
 
-  <div id="about" style="visibility: hidden">
+  <div id="add" class="popup" style="visibility: hidden">
+    <label for="addName">Name:</label>
+    <input id="addName" name="addName" />
+    <button id="addDog" disabled="true">Add Dog</button>
+  </div>
+
+  <div id="about" class="popup" style="visibility: hidden">
     Icons by <a href="https://www.freepik.com/" title="Freepik">Freepik</a>, 
     <a href="https://www.flaticon.com/authors/twitter" title="Twitter">Twitter</a> 
     from <a href="https://www.flaticon.com/" title="Flaticon">flaticon.com</a>. <br />
