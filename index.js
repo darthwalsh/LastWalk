@@ -34,13 +34,21 @@ function onClick(prefix) {
 function init(prefix) {
   $(prefix).onclick = onClick(prefix);
 
-  ref.on("value", snapShot => last[prefix] = moment(snapShot.val()[prefix]));
+  ref.on("value", snapShot => last[prefix] = snapShot.val()[prefix]);
   
   setInterval(() => {
     if (!last[prefix]) {
       return;
     }
-    $(`${prefix}time`).textContent = last[prefix].fromNow();
+    const millis = new Date().getTime() - last[prefix];
+    let minutes = Math.floor(millis / 60000);
+    const hours = Math.floor(minutes / 60);
+    minutes %= 60;
+    minutes = minutes.toString();
+    if (minutes.length === 1) {
+      minutes = "0" + minutes;
+    }
+    $(`${prefix}time`).textContent = `${hours}:${minutes}`;
   }, 1);
 }
 
