@@ -31,7 +31,12 @@ function onClick(prefix) {
 function init(prefix) {
   $(prefix).onclick = onClick(prefix);
 
-  ref.on("value", snapShot => last[prefix] = snapShot.val()[prefix]);
+  ref.on("value", snapShot => {
+    const val = snapShot.val();
+    if (val) {
+      last[prefix] = val[prefix];
+    }
+  });
   
   setInterval(() => {
     if (!last[prefix]) {
@@ -54,7 +59,10 @@ window.onload = () => {
     ref = database.ref(dogId);
     init("walk");
     init("poo");
-    ref.once("value", snapshot => $("name").textContent = snapshot.val().name)
+    ref.once("value", snapshot => {
+      const val = snapshot.val();
+      $("name").textContent = val ? val.name : "MissingNo";
+    });
   } else {
     $("add").style.visibility = "";
     const newId = Math.random().toString(36).substring(2);
