@@ -11,7 +11,12 @@
 </head>
 
 <body>
-  <div id="aboutLink">About</div>
+  <div class="topRight">
+    <p id="aboutLink" align="right">About</p>
+    <br />
+    <input id="manualEntry" type="checkbox" />
+    <label for="manualEntry">Manual Entry</label>
+  </div>
   
   <h1 id="name">doggo</h1>
   
@@ -19,7 +24,7 @@
     <img id="walk" src="walking-with-dog.svg" alt="Dog walk" />
     <button id="undowalk" class="undoButton" style="visibility: hidden">Undo Walk</button>
   </div>
-  <span id="walktime">loading...</span>
+  <span id="walktime" class="timer">loading...</span>
 
   <br>
 
@@ -27,12 +32,17 @@
     <img id="poo" src="poo.svg" alt="Dog poo" />
     <button id="undopoo" class="undoButton" style="visibility: hidden">Undo Poo</button>
   </div>
-  <span id="pootime">loading...</span>
+  <span id="pootime" class="timer">loading...</span>
 
   <div id="add" class="popup" style="visibility: hidden">
     <label for="addName">Name:</label>
-    <input id="addName" name="addName" />
+    <input id="addName" />
     <button id="addDog" disabled="true">Add Dog</button>
+  </div>
+
+  <div id="manualPopup" class="popup" style="visibility: hidden">
+    <input type="time" id="manualTime" />
+    <button id="setManualTime" disabled="true">Set Time</button>    
   </div>
 
   <div id="about" class="popup" style="visibility: hidden">

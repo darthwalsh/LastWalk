@@ -16,7 +16,7 @@ img {
   height: 24vh;
 }
 
-span {
+.timer {
   font-size: 10vh;
 }
 
@@ -32,7 +32,7 @@ span {
   font-size: 4vh;
 }
 
-#aboutLink {
+.topRight {
   position: fixed;
   top: 1vh;
   right: 1vh;

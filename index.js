@@ -23,24 +23,47 @@ const last = { };
 
 function onClick(prefix) {
   return () => {
-    const oldMillis = last[prefix];
-    const newMillis = new Date().getTime();
-    const prefixRef = database.ref(`${dogId}/${prefix}`);
-    prefixRef.set(newMillis, () => {
-      const undo = $(`undo${prefix}`);
-      if (undo.style.visibility === "" || !oldMillis) {
-        return;
+    const now = new Date();
+    if ($("manualEntry").checked) {
+      $("manualPopup").style.visibility = "";
+      
+      $("manualTime").addEventListener("input", e => 
+        $("setManualTime").disabled = !Boolean(e.target.value.length));
+      $("setManualTime").onclick = () => {
+        const text = $("manualTime").value;
+        $("manualTime").value = "";
+        const [h, m] = text.split(":").map(s => +s);
+        const mins = h * 60 + m;
+        const nowMins = now.getHours() * 60 + now.getMinutes();
+        const diff = nowMins - mins;
+        const pastMins = diff < 0 ? 24 * 60 + diff : diff;
+        const pastStamp = now.getTime() - pastMins * 60 * 1000;
+        $("manualPopup").style.visibility = "hidden";
+        setMillis(prefix, pastStamp);
       }
-
-      const timer = setTimeout(() => undo.style.visibility = "hidden", 5000);
-      undo.onclick = () => {
-        prefixRef.set(oldMillis);
-        undo.style.visibility = "hidden";
-        clearTimeout(timer);
-      }
-      undo.style.visibility = "";
-    });
+    } else {
+      setMillis(prefix, now.getTime());
+    }
   }
+}
+
+function setMillis(prefix, newMillis) {
+  const oldMillis = last[prefix];
+  const prefixRef = database.ref(`${dogId}/${prefix}`);
+  prefixRef.set(newMillis, () => {
+    const undo = $(`undo${prefix}`);
+    if (undo.style.visibility === "" || !oldMillis) {
+      return;
+    }
+    
+    const timer = setTimeout(() => undo.style.visibility = "hidden", 5000);
+    undo.onclick = () => {
+      prefixRef.set(oldMillis);
+      undo.style.visibility = "hidden";
+      clearTimeout(timer);
+    };
+    undo.style.visibility = "";
+  });
 }
 
 function init(prefix) {
