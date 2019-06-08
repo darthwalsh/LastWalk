@@ -23,8 +23,23 @@ const last = { };
 
 function onClick(prefix) {
   return () => {
+    const oldMillis = last[prefix];
     const newMillis = new Date().getTime();
-    database.ref(`${dogId}/${prefix}`).set(newMillis);
+    const prefixRef = database.ref(`${dogId}/${prefix}`);
+    prefixRef.set(newMillis, () => {
+      const undo = $(`undo${prefix}`);
+      if (undo.style.visibility === "" || !oldMillis) {
+        return;
+      }
+
+      const timer = setTimeout(() => undo.style.visibility = "hidden", 5000);
+      undo.onclick = () => {
+        prefixRef.set(oldMillis);
+        undo.style.visibility = "hidden";
+        clearTimeout(timer);
+      }
+      undo.style.visibility = "";
+    });
   }
 }
 
